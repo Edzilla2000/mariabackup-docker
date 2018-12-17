@@ -8,6 +8,7 @@ To backup: <br/>
 #!/bin/bash
 
 docker run --rm \
+       -e HOST="nextcloud_db" \
        --net webgateway \
        -v /srv/nextcloud/mariadb:/var/lib/mysql \
        -v /srv/mysqlbackup/backup.cnf:/etc/mysql/backup.cnf \
