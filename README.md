@@ -1,4 +1,4 @@
-# perconaxtrabackup
+# Mariabackup for docker
 
 Docker container to backup mariadb instance using mariabackup.<br/>
 Largery based on https://github.com/khoanguyen96/dockerfiles/tree/master/percona-xtrabackup <br/>
