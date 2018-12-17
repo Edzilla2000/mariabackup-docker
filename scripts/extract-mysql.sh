@@ -6,12 +6,16 @@ encryption_key_file="/backups/mysql/encryption_key"
 log_file="extract-progress.log"
 number_of_args="${#}"
 processors="$(nproc --all)"
+folder="/backups/mysql/$DAY"
+
+cd "${folder}"
 
 # Use this to echo to standard error
 error () {
     printf "%s: %s\n" "$(basename "${BASH_SOURCE}")" "${1}" >&2
     exit 1
 }
+
 
 trap 'error "An unexpected error occurred.  Try checking the \"${log_file}\" file for more information."' ERR
 
@@ -41,7 +45,7 @@ do_extraction () {
     
         # Extract the directory structure from the backup file
         mkdir --verbose -p "${restore_dir}"
-        xbstream -x -C "${restore_dir}" < "${file}"
+        mbstream -x -C "${restore_dir}" < "${file}"
 
         xtrabackup_args=(
             "--parallel=${processors}"

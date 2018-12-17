@@ -2,10 +2,14 @@
 
 export LC_ALL=C
 
+folder="/backups/mysql/$DAY/restore"
+cd "${folder}"
 shopt -s nullglob
 incremental_dirs=( ./incremental-*/ )
 full_dirs=( ./full-*/ )
 shopt -u nullglob
+
+
 
 log_file="prepare-progress.log"
 full_backup_dir="${full_dirs[0]}"

@@ -10,6 +10,7 @@ log_file="${todays_dir}/backup-progress.log"
 encryption_key_file="${parent_dir}/encryption_key"
 now="$(date +%m-%d-%Y_%H-%M-%S)"
 processors="$(nproc --all)"
+docker_host="nextcloud_db"
 
 # Use this to echo to standard error
 error () {
@@ -40,7 +41,7 @@ set_options () {
         "--compress-threads=${processors}"
         "--encrypt-threads=${processors}"
         "--slave-info"
-	"--host=nextcloud_db"
+	"--host=${docker_host}"
     )
     
     backup_type="full"
