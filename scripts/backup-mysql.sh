@@ -3,7 +3,6 @@
 export LC_ALL=C
 
 days_of_backups=3  # Must be less than 7
-backup_owner="backup"
 parent_dir="/backups/mysql"
 defaults_file="/etc/mysql/backup.cnf"
 todays_dir="${parent_dir}/$(date +%a)"
@@ -21,11 +20,6 @@ error () {
 trap 'error "An unexpected error occurred."' ERR
 
 sanity_check () {
-    # Check user running the script
-    if [ "$(id --user --name)" != "$backup_owner" ]; then
-        error "Script can only be run as the \"$backup_owner\" user"
-    fi
-    
     # Check whether the encryption key file is available
     if [ ! -r "${encryption_key_file}" ]; then
         error "Cannot read encryption key at ${encryption_key_file}"
@@ -46,6 +40,7 @@ set_options () {
         "--compress-threads=${processors}"
         "--encrypt-threads=${processors}"
         "--slave-info"
+	"--host=nextcloud_db"
     )
     
     backup_type="full"
@@ -72,7 +67,7 @@ take_backup () {
     # Make sure today's backup directory is available and take the actual backup
     mkdir -p "${todays_dir}"
     find "${todays_dir}" -type f -name "*.incomplete" -delete
-    xtrabackup "${xtrabackup_args[@]}" --target-dir="${todays_dir}" > "${todays_dir}/${backup_type}-${now}.xbstream.incomplete" 2> "${log_file}"
+    mariabackup "${xtrabackup_args[@]}" --target-dir="${todays_dir}" > "${todays_dir}/${backup_type}-${now}.xbstream.incomplete" 2> "${log_file}"
     
     mv "${todays_dir}/${backup_type}-${now}.xbstream.incomplete" "${todays_dir}/${backup_type}-${now}.xbstream"
 }
